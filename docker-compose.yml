@@ -1,0 +1,10 @@
+version: "3.4"
+
+services:
+  anaconda:
+    image: anaconda
+    build: .
+    ports:
+      - 8888:8888
+    volumes:
+      - ./notebooks:/opt/notebooks
