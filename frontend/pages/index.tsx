@@ -1,5 +1,6 @@
 import { FC } from "react";
 import Card from "../Components/Card/card";
+import getConfig from "next/config";
 import * as a from "axios";
 const axois = a.default;
 
@@ -34,7 +35,11 @@ const Index: FC<IndexProps> = ({ data }) => {
         }}
       >
         {data.map((algo) => (
-          <Card name={algo.Name} key={algo.algorithm} algorithm={algo.algorithm}/>
+          <Card
+            name={algo.Name}
+            key={algo.algorithm}
+            algorithm={algo.algorithm}
+          />
         ))}
       </section>
     </div>
@@ -42,7 +47,8 @@ const Index: FC<IndexProps> = ({ data }) => {
 };
 
 export async function getServerSideProps(context) {
-  const res = await axois.get("http://localhost:5000/getAlgos");
+  const { publicRuntimeConfig } = getConfig();
+  const res = await axois.get(`${publicRuntimeConfig.API_URL}/getAlgos`);
   const data: Array<Algorithm> = res.data.result;
   return {
     props: { data }, // will be passed to the page component as props
