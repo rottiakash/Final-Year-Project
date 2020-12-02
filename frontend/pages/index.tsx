@@ -1,7 +1,10 @@
 import { FC } from "react";
-import Card from "../Components/Card/card";
+import Head from "next/head";
+import AlgoGrid from "../Components/AlgoGrid/algogrid";
 import getConfig from "next/config";
 import * as a from "axios";
+import Header from "../Components/Header/header";
+import Container from "../Components/Container/container";
 const axois = a.default;
 
 interface Algorithm {
@@ -15,34 +18,13 @@ interface IndexProps {
 
 const Index: FC<IndexProps> = ({ data }) => {
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <span
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          width: "100vw",
-          fontSize: "2rem",
-          marginTop: "30px",
-        }}
-      >
-        Outlier Detection for COVID-19 Data
-      </span>
-      <section
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: "1rem",
-        }}
-      >
-        {data.map((algo) => (
-          <Card
-            name={algo.Name}
-            key={algo.algorithm}
-            algorithm={algo.algorithm}
-          />
-        ))}
-      </section>
-    </div>
+    <Container>
+      <Head>
+        <title>Outlier Detection</title>
+      </Head>
+      <Header heading={"Outlier Detection for COVID-19 Data"} />
+      <AlgoGrid data={data} />
+    </Container>
   );
 };
 
