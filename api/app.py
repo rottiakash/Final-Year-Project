@@ -8,6 +8,8 @@ from sklearn.neighbors import LocalOutlierFactor
 from sklearn.covariance import EllipticEnvelope
 from sklearn.ensemble import IsolationForest
 from sklearn.svm import OneClassSVM
+from werkzeug.utils import secure_filename
+import os
 app = Flask(__name__)
 algorithms = [
     (LocalOutlierFactor(n_neighbors=1)),
@@ -52,6 +54,29 @@ def algos():
     for i, v in enumerate(algorithms):
         result.append({"algorithm": i, "Name": str(v).split("(")[0]})
     return {"result": result}
+
+ALLOWED_EXTENSIONS = {'csv'}
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            return "File Not Uploaded"
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            return ('No selected file')
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save("data.csv")
+            df = pd.read_csv("data.csv")
+            return {"states":list( set(df["State/UnionTerritory"].values))}
+
 
 
 if __name__ == "__main__":
