@@ -4,3 +4,4 @@ flask
 plotly
 sklearn
 gunicorn
+flask-cors

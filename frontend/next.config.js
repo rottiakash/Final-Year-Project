@@ -4,6 +4,6 @@ module.exports = {
   },
   publicRuntimeConfig: {
     // Will be available on both server and client
-    API_URL: "https://final-year-api-qewpzh5ryq-el.a.run.app",
+    API_URL: "http://localhost:5000",
   },
 };
