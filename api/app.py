@@ -8,7 +8,11 @@ from sklearn.neighbors import LocalOutlierFactor
 from sklearn.covariance import EllipticEnvelope
 from sklearn.ensemble import IsolationForest
 from sklearn.svm import OneClassSVM
+from werkzeug.utils import secure_filename
+import os
+from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 algorithms = [
     (LocalOutlierFactor(n_neighbors=1)),
     OneClassSVM(),
@@ -20,14 +24,15 @@ algorithms = [
 @app.route("/", methods=["POST"])
 def index():
     try:
+        data = request.get_json()
         df = pd.read_csv("./covid_19_india.csv")
-        df = df[df['State/UnionTerritory'] == "Karnataka"]
+        df = df[df['State/UnionTerritory'] == data["State"]]
         df["Confirmed"] = df["Confirmed"].diff()
         df = df.dropna()
         X = df[["Date", "Confirmed"]].values
-        clf = algorithms[int(request.form["Algorithm"])]
+        clf = algorithms[int(data["Algorithm"])]
         X = X[:, 1].reshape(X.shape[0], 1)
-        if int(request.form["Algorithm"]) == 0:
+        if int(data["Algorithm"]) == 0:
             Y = clf.fit_predict(X)
         else:
             Y = clf.fit(X).predict(X)
@@ -39,7 +44,7 @@ def index():
         fig.add_trace(go.Scatter(
             x=a["Date"], y=a["Confirmed"], mode='markers', name='Anomaly'))
         fig.update_layout(showlegend=True, title='Detected anomalies(Algorithm:%s)' % (
-            str(algorithms[int(request.form["Algorithm"])]).split("(")[0]))
+            str(algorithms[int(data["Algorithm"])]).split("(")[0]))
         fig.write_html("./templates/graph.html")
         return render_template("graph.html")
     except KeyError:
@@ -52,6 +57,31 @@ def algos():
     for i, v in enumerate(algorithms):
         result.append({"algorithm": i, "Name": str(v).split("(")[0]})
     return {"result": result}
+
+
+ALLOWED_EXTENSIONS = {'csv'}
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            return "File Not Uploaded"
+        file = request.files['file']
+        if file.filename == '':
+            return ('No selected file')
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save("data.csv")
+            df = pd.read_csv("data.csv")
+            df[["Date", "State/UnionTerritory", "Confirmed"]]
+            return {"states": list(set(df["State/UnionTerritory"].values))}
 
 
 if __name__ == "__main__":

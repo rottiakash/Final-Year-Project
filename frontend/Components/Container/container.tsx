@@ -6,7 +6,9 @@ interface ContainerProps {
 
 const Container: FC<ContainerProps> = ({ children }) => {
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>{children}</div>
+    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+      {children}
+    </div>
   );
 };
 
