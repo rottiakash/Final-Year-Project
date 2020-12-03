@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { FC, useContext, useState } from "react";
+import React, { FC, useContext, useState } from "react";
 import { Upload, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import Container from "../../Components/Container/container";
@@ -8,6 +8,7 @@ import getConfig from "next/config";
 import { Select } from "antd";
 import { Button } from "antd";
 import Head from "next/head";
+import SampleDataset from "../../Components/SampleDataset/sample";
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -48,22 +49,26 @@ const InputComponent: FC = () => {
       <Head>
         <title>Outlier Detection</title>
       </Head>
-      <Header heading={"Outlier Detection for COVID-19 Data"} showHome />
+      <Header heading={"Outlier Detection in COVID-19 Data"} showHome />
       {!uploaded && (
-        <Dragger {...props} style={{ marginTop: "30px" }}>
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag file to this area to upload
-          </p>
-          <p className="ant-upload-hint">
-            Upload the .csv file of dataset here.
-          </p>
-          <p className="ant-upload-hint">
-            Dataset must contain headings Date, State/UnionTerritory, Confirmed
-          </p>
-        </Dragger>
+        <div>
+          <Dragger {...props} style={{ marginTop: "30px" }}>
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <p className="ant-upload-text">
+              Click or drag file to this area to upload
+            </p>
+            <p className="ant-upload-hint">
+              Upload the .csv file of dataset here.
+            </p>
+            <p className="ant-upload-hint">
+              Dataset must contain headings Date, State/UnionTerritory,
+              Confirmed
+            </p>
+          </Dragger>
+          <SampleDataset />
+        </div>
       )}
       {uploaded && (
         <div

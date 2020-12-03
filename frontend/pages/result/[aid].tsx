@@ -16,7 +16,7 @@ const Result: FC<ResultProps> = ({ output }) => {
       <Head>
         <title>Outlier Detection</title>
       </Head>
-      <Header heading={"Outlier Detection for COVID-19 Data"} showHome />
+      <Header heading={"Outlier Detection in COVID-19 Data"} showHome />
       <iframe srcDoc={output} style={{ width: "100%", height: "100%" }} />
     </Container>
   );

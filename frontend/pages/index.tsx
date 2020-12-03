@@ -22,7 +22,7 @@ const Index: FC<IndexProps> = ({ data }) => {
       <Head>
         <title>Outlier Detection</title>
       </Head>
-      <Header heading={"Outlier Detection for COVID-19 Data"} />
+      <Header heading={"Outlier Detection in COVID-19 Data"} />
       <AlgoGrid data={data} />
     </Container>
   );
