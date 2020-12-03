@@ -5,14 +5,17 @@ import styles from "./card.module.css";
 interface CardProps {
   name: string;
   algorithm: number;
+  setSpinning:any;
 }
 
-const Card: FC<CardProps> = ({ name, algorithm }) => {
+const Card: FC<CardProps> = ({ name, algorithm,setSpinning }) => {
   const router = useRouter();
   return (
     <section
       className={styles.card}
-      onClick={() => router.push(`/input/${algorithm}`)}
+      onClick={() => {
+        setSpinning(true);
+        router.push(`/input/${algorithm}`)}}
     >
       <span>{name}</span>
     </section>
