@@ -4,6 +4,7 @@ import Header from "../../Components/Header/header";
 import * as a from "axios";
 import Container from "../../Components/Container/container";
 import Head from "next/head";
+import Progress from "../../Components/Steps/steps";
 
 const axios = a.default;
 interface ResultProps {
@@ -17,6 +18,7 @@ const Result: FC<ResultProps> = ({ output }) => {
         <title>Outlier Detection</title>
       </Head>
       <Header heading={"Outlier Detection in COVID-19 Data"} showHome />
+      <Progress stage={3} />
       <iframe srcDoc={output} style={{ width: "100%", height: "100%" }} />
     </Container>
   );

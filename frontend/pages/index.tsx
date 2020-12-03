@@ -7,6 +7,7 @@ import * as a from "axios";
 import Header from "../Components/Header/header";
 import Container from "../Components/Container/container";
 import Spinner from "../Components/Spinner/spinner";
+import Progress from "../Components/Steps/steps";
 const axois = a.default;
 
 interface Algorithm {
@@ -27,6 +28,8 @@ const Index: FC<IndexProps> = ({ data }) => {
           <title>Outlier Detection</title>
         </Head>
         <Header heading={"Outlier Detection in COVID-19 Data"} />
+        <Progress stage={0} />
+        <div></div>
         <AlgoGrid data={data} setSpinning={setSpinning} />
       </Container>
     </Spinner>
