@@ -9,6 +9,7 @@ import { Select, Button, Form } from "antd";
 import Head from "next/head";
 import SampleDataset from "../../Components/SampleDataset/sample";
 import Spinner from "../../Components/Spinner/spinner";
+import Progress from "../../Components/Steps/steps";
 
 const { Option } = Select;
 const { Dragger } = Upload;
@@ -31,6 +32,7 @@ const InputComponent: FC = () => {
         else {
           setStates(info.file.response.states);
           setUploaded(true);
+          setStage(2);
           message.success(`${info.file.name} file uploaded successfully.`);
         }
       } else if (status === "error") {
@@ -42,6 +44,7 @@ const InputComponent: FC = () => {
   const [uploaded, setUploaded] = useState<Boolean>(false);
   const [spinning, setSpinning] = useState<boolean>(false);
   const [selected, setSelected] = useState<any>();
+  const [stage, setStage] = useState<number>(1);
   const [states, setStates] = useState<Array<string>>([]);
   const router = useRouter();
   const { aid } = router.query;
@@ -56,6 +59,7 @@ const InputComponent: FC = () => {
           <title>Outlier Detection</title>
         </Head>
         <Header heading={"Outlier Detection in COVID-19 Data"} showHome />
+        <Progress stage={stage} />
         {!uploaded && (
           <div>
             <Dragger {...props} style={{ marginTop: "30px" }}>
