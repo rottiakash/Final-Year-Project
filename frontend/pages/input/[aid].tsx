@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { FC, useContext, useState } from "react";
+import React, { FC, useState } from "react";
 import { Upload, message } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 import Container from "../../Components/Container/container";
@@ -10,33 +10,57 @@ import Head from "next/head";
 import SampleDataset from "../../Components/SampleDataset/sample";
 import Spinner from "../../Components/Spinner/spinner";
 import Progress from "../../Components/Steps/steps";
-
+import nookies from "nookies";
+import * as a from "axios";
+const axios = a.default;
 const { Option } = Select;
 const { Dragger } = Upload;
 const { publicRuntimeConfig } = getConfig();
 
 const InputComponent: FC = () => {
+  const upload = (options) => {
+    const { onSuccess, onError, file, onProgress } = options;
+
+    const fmData = new FormData();
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+      onUploadProgress: (event) => {
+        onProgress({ percent: (event.loaded / event.total) * 100 }, file);
+      },
+    };
+    fmData.append("file", file);
+    fmData.append("token", nookies.get(null).token);
+    axios
+      .post(`${publicRuntimeConfig.API_URL}/upload`, fmData, config)
+      .then((res) => {
+        onSuccess(res);
+      })
+      .catch((err) => {
+        const error = new Error("Some error");
+        onError({ event: error });
+      });
+  };
   const props = {
     name: "file",
-    action: `${publicRuntimeConfig.API_URL}/upload`,
+    customRequest: upload,
     onChange(info) {
-      console.log(info);
       const { status } = info.file;
       if (status === "done") {
-        if (info.file.response === "File Not Allowed")
+        if (info.file.response.data === "File Not Allowed")
           message.error(`${info.file.name} File Not .csv`);
-        else if (info.file.response === "Header Not Found")
+        else if (info.file.response.data === "Header Not Found")
           message.error(
             `${info.file.name} Required Headers not found in .csv file `
           );
         else {
-          setStates(info.file.response.states);
+          setStates(info.file.response.data.states);
           setUploaded(true);
           setStage(2);
           message.success(`${info.file.name} file uploaded successfully.`);
         }
       } else if (status === "error") {
-        console.log(info);
         message.error(`${info.file.name} file upload failed.`);
       }
     },

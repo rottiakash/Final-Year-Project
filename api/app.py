@@ -23,7 +23,7 @@ algorithms = [
 def index():
     try:
         data = request.get_json()
-        df = pd.read_csv("./covid_19_india.csv")
+        df = pd.read_csv("./%s.csv" % (data['token']))
         df = df[df['State/UnionTerritory'] == data["State"]]
         df["Confirmed"] = df["Confirmed"].diff()
         df = df.dropna()
@@ -43,8 +43,8 @@ def index():
             x=a["Date"], y=a["Confirmed"], mode='markers', name='Anomaly'))
         fig.update_layout(showlegend=True, title='Detected anomalies(Algorithm:%s, State:%s)' % (
             str(algorithms[int(data["Algorithm"])]).split("(")[0], data['State']))
-        fig.write_html("./templates/graph.html")
-        return render_template("graph.html")
+        fig.write_html("./templates/%s.html" % (data['token']))
+        return render_template("%s.html" % (data['token']))
     except KeyError:
         return "Algorithm Not Specified"
 
@@ -69,6 +69,7 @@ def allowed_file(filename):
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
+        token = request.form['token']
         if 'file' not in request.files:
             return "File Not Uploaded"
         file = request.files['file']
@@ -76,8 +77,8 @@ def upload_file():
             return ('No selected file')
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save("data.csv")
-            df = pd.read_csv("data.csv")
+            file.save("%s.csv" % (token))
+            df = pd.read_csv("%s.csv" % (token))
             try:
                 df[["Date", "State/UnionTerritory", "Confirmed"]]
             except KeyError:
