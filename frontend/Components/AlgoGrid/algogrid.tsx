@@ -8,9 +8,10 @@ interface Algorithm {
 
 interface AlgoGridProps {
   data: Array<Algorithm>;
+  setSpinning: any;
 }
 
-const AlgoGrid: FC<AlgoGridProps> = ({ data }) => (
+const AlgoGrid: FC<AlgoGridProps> = ({ data, setSpinning }) => (
   <section
     style={{
       display: "grid",
@@ -19,7 +20,12 @@ const AlgoGrid: FC<AlgoGridProps> = ({ data }) => (
     }}
   >
     {data.map((algo) => (
-      <Card name={algo.Name} key={algo.algorithm} algorithm={algo.algorithm} />
+      <Card
+        name={algo.Name}
+        key={algo.algorithm}
+        algorithm={algo.algorithm}
+        setSpinning={setSpinning}
+      />
     ))}
   </section>
 );
