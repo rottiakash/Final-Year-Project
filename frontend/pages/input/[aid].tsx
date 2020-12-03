@@ -18,11 +18,20 @@ const InputComponent: FC = () => {
     name: "file",
     action: `${publicRuntimeConfig.API_URL}/upload`,
     onChange(info) {
+      console.log(info);
       const { status } = info.file;
       if (status === "done") {
-        setStates(info.file.response.states);
-        setUploaded(true);
-        message.success(`${info.file.name} file uploaded successfully.`);
+        if (info.file.response === "File Not Allowed")
+          message.error(`${info.file.name} File Not .csv`);
+        else if (info.file.response === "Header Not Found")
+          message.error(
+            `${info.file.name} Required Headers not found in .csv file `
+          );
+        else {
+          setStates(info.file.response.states);
+          setUploaded(true);
+          message.success(`${info.file.name} file uploaded successfully.`);
+        }
       } else if (status === "error") {
         console.log(info);
         message.error(`${info.file.name} file upload failed.`);

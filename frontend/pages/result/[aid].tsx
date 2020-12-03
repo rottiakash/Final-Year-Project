@@ -1,8 +1,9 @@
-import { FC, useContext } from "react";
+import React, { FC, useContext } from "react";
 import getConfig from "next/config";
 import Header from "../../Components/Header/header";
 import * as a from "axios";
 import Container from "../../Components/Container/container";
+import Head from "next/head";
 
 const axios = a.default;
 interface ResultProps {
@@ -12,6 +13,9 @@ interface ResultProps {
 const Result: FC<ResultProps> = ({ output }) => {
   return (
     <Container>
+      <Head>
+        <title>Outlier Detection</title>
+      </Head>
       <Header heading={"Outlier Detection for COVID-19 Data"} showHome />
       <iframe srcDoc={output} style={{ width: "100%", height: "100%" }} />
     </Container>

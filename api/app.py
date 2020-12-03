@@ -43,8 +43,8 @@ def index():
             x=df["Date"], y=df["Confirmed"], name='Confirmed'))
         fig.add_trace(go.Scatter(
             x=a["Date"], y=a["Confirmed"], mode='markers', name='Anomaly'))
-        fig.update_layout(showlegend=True, title='Detected anomalies(Algorithm:%s)' % (
-            str(algorithms[int(data["Algorithm"])]).split("(")[0]))
+        fig.update_layout(showlegend=True, title='Detected anomalies(Algorithm:%s, State:%s)' % (
+            str(algorithms[int(data["Algorithm"])]).split("(")[0], data['State']))
         fig.write_html("./templates/graph.html")
         return render_template("graph.html")
     except KeyError:
@@ -80,8 +80,12 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save("data.csv")
             df = pd.read_csv("data.csv")
-            df[["Date", "State/UnionTerritory", "Confirmed"]]
+            try:
+                df[["Date", "State/UnionTerritory", "Confirmed"]]
+            except KeyError:
+                return "Header Not Found"
             return {"states": list(set(df["State/UnionTerritory"].values))}
+        return "File Not Allowed"
 
 
 if __name__ == "__main__":
