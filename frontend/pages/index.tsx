@@ -1,14 +1,25 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Head from "next/head";
 import AlgoGrid from "../Components/AlgoGrid/algogrid";
 import getConfig from "next/config";
-
+import nookies from "nookies";
 import * as a from "axios";
 import Header from "../Components/Header/header";
 import Container from "../Components/Container/container";
 import Spinner from "../Components/Spinner/spinner";
 import Progress from "../Components/Steps/steps";
 const axois = a.default;
+
+function makeid(length: number) {
+  var result = "";
+  var characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
 
 interface Algorithm {
   Name: string;
@@ -21,6 +32,12 @@ interface IndexProps {
 
 const Index: FC<IndexProps> = ({ data }) => {
   const [spinning, setSpinning] = useState<boolean>(false);
+  useEffect(() => {
+    const cookies = nookies.get(null);
+    if (!cookies.token) {
+      nookies.set(null, "token", makeid(20), { maxAge: 30 * 24 * 60 * 60 });
+    }
+  }, []);
   return (
     <Spinner spinning={spinning}>
       <Container>
