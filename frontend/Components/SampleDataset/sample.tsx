@@ -49,7 +49,6 @@ const SampleDataset: FC = () => (
       width: "100%",
       flexDirection: "column",
       marginTop: "30px",
-
       alignItems: "center",
     }}
   >

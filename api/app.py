@@ -1,7 +1,6 @@
 from flask import Flask
 from flask.globals import request
 import plotly.graph_objects as go
-import numpy as np
 import pandas as pd
 from flask import render_template
 from sklearn.neighbors import LocalOutlierFactor
@@ -9,7 +8,6 @@ from sklearn.covariance import EllipticEnvelope
 from sklearn.ensemble import IsolationForest
 from sklearn.svm import OneClassSVM
 from werkzeug.utils import secure_filename
-import os
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
@@ -84,7 +82,7 @@ def upload_file():
                 df[["Date", "State/UnionTerritory", "Confirmed"]]
             except KeyError:
                 return "Header Not Found"
-            return {"states": list(set(df["State/UnionTerritory"].values))}
+            return {"states": list(filter(lambda x: not "***" in x, list(set(df["State/UnionTerritory"].values))))}
         return "File Not Allowed"
 
 

@@ -5,8 +5,7 @@ import { InboxOutlined } from "@ant-design/icons";
 import Container from "../../Components/Container/container";
 import Header from "../../Components/Header/header";
 import getConfig from "next/config";
-import { Select } from "antd";
-import { Button } from "antd";
+import { Select, Button, Form } from "antd";
 import Head from "next/head";
 import SampleDataset from "../../Components/SampleDataset/sample";
 
@@ -44,6 +43,9 @@ const InputComponent: FC = () => {
   const [states, setStates] = useState<Array<string>>([]);
   const router = useRouter();
   const { aid } = router.query;
+  const onComplete = () => {
+    router.push(`/result/${aid}?State=${selected}`);
+  };
   return (
     <Container>
       <Head>
@@ -81,36 +83,39 @@ const InputComponent: FC = () => {
             gap: "2rem",
           }}
         >
-          <Select
-            onChange={(value) => setSelected(value)}
-            placeholder="Select a State/Union Territory"
-            style={{ width: "100vw" }}
-          >
-            {states.map((state) => (
-              <Option value={state} key={state}>
-                {state}
-              </Option>
-            ))}
-          </Select>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100vw",
-            }}
-          >
-            <Button
-              type="primary"
-              shape="round"
-              style={{ width: "100px", marginTop: "30px" }}
-              onClick={async (e) => {
-                e.preventDefault();
-                router.push(`/result/${aid}?State=${selected}`);
+          <Form onFinish={onComplete}>
+            <Form.Item name="State" label="State" rules={[{ required: true }]}>
+              <Select
+                onChange={(value) => setSelected(value)}
+                placeholder="Select a State/Union Territory"
+                style={{ width: "100vw" }}
+              >
+                {states.map((state) => (
+                  <Option value={state} key={state}>
+                    {state}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                width: "100vw",
               }}
             >
-              Submit
-            </Button>
-          </div>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  shape="round"
+                  htmlType="submit"
+                  style={{ width: "100px", marginTop: "30px" }}
+                >
+                  Submit
+                </Button>
+              </Form.Item>
+            </div>
+          </Form>
         </div>
       )}
     </Container>
